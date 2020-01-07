@@ -1,5 +1,15 @@
 var express = require("express");
 var cheerio = require("cheerio");
+var mongojs = require("mongojs");
+
+var databaseUrl = "techlab";
+var collections = ["articles"];
+var db = mongojs(databaseUrl, collections);
+
+// Log any mongojs errors to console
+db.on("error", function(error) {
+  console.log("Database Error:", error);
+});
 // Makes HTTP request for HTML page
 var axios = require("axios");
 axios.get("https://www.nytimes.com/section/technology").then(function(response) {
@@ -24,14 +34,28 @@ axios.get("https://www.nytimes.com/section/technology").then(function(response) 
     var link = $(element).find("a").attr("href");
 
     // Save these results in an object that we'll push into the results array we defined earlier
-    results.push({
+   db.articles.save({
       title: title,
       link: link,
       summary:summary
     });
   });
-  console.log(results);
+  db.articles.find().sort({ title: 1 }, function(error, found) {
+    // Log any errors if the server encounters one
+    if (error) {
+      console.log(error);
+    }
+    // Otherwise, send the result of this query to the browser
+    else {
+      console.log(found);
+    }
+  });
+
+  
+    
 });
+
+
 
 //   app.get("/", function(req, res) {
 //     res.send("Hello world");
