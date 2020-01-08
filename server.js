@@ -1,11 +1,21 @@
 var express = require("express");
 var cheerio = require("cheerio");
 var mongojs = require("mongojs");
+var helpers = require('handlebars-helpers')();
+var exphbs = require("express-handlebars");
 
 var app = express();
 var PORT = process.env.PORT || 3000;
+app.use(express.json());
+app.use(express.static("public"));
 
-
+app.engine(
+  "handlebars",
+  exphbs({
+    defaultLayout: "main"
+  })
+);
+app.set("view engine", "handlebars");
 
 var databaseUrl = "techlab";
 var collections = ["articles"];
@@ -18,6 +28,19 @@ db.on("error", function (error) {
 
 // Makes HTTP request for HTML page
 var axios = require("axios");
+
+app.get("/", function (req, res) {
+  if (req.user) {
+      res.render("index", {
+          authenticated: true,
+      });
+  }
+  else {
+      res.render("index", {
+          authenticated: false,
+      });
+  }
+});
 
 app.post("/api/articles", function (req, res) {
   axios.get("https://www.nytimes.com/section/technology").then(function (response) {
