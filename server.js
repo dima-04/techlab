@@ -62,10 +62,12 @@ app.post("/api/articles", function (req, res) {
 
       // In the currently selected element, look at its child elements (i.e., its a-tags),
       // then save the values for any "href" attributes that the child elements may have
+      var id = $(element).find("a").attr("href");
       var link = "https://www.nytimes.com/"+$(element).find("a").attr("href");
 
       // Save these results in an object that we'll push into the results array we defined earlier
       db.articles.save({
+        _id: id,
         title: title,
         link: link,
         summary: summary
