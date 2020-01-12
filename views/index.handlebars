@@ -37,7 +37,7 @@
         <div class="col-md-12">
           <div class="row">
             <div class="col-md-12">
-              <a href="{{this.link}}"target="_blank">
+              <a href="{{this.link}}" target="_blank">
                 <h2>{{this.title}}</h2>
               </a>
             </div>
@@ -47,11 +47,22 @@
               <p>{{this.summary}}</p>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <form>
+                  <label for="exampleFormControlTextarea1">Write Your Comment</label>
+                  <textarea class="form-control" id="{{this._id}}" rows="3"></textarea>
+              </div>
+              <button class="btn btn-primary commentButton" data-id="{{this._id}}" type="submit">Comment</button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
       {{/each}}
-
     </div>
+
   </div>
 
 </div>

@@ -1,7 +1,8 @@
 var express = require("express");
 var cheerio = require("cheerio");
-var mongojs = require("mongojs");
+var mongoose = require("mongoose");
 var exphbs = require("express-handlebars");
+var db = require("./models");
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -16,29 +17,15 @@ app.use(express.json());
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-var databaseUrl = "techlab";
-var collections = ["articles"];
-var db = mongojs(databaseUrl, collections);
+mongoose.connect("mongodb://localhost/techlab", { useNewUrlParser: true });
 
-// Log any mongojs errors to console
-db.on("error", function (error) {
-  console.log("Database Error:", error);
-});
-
+db.Article.deleteMany({});
 // Makes HTTP request for HTML page
 var axios = require("axios");
 
 app.get("/", function (req, res) {
-  db.articles.find().sort({ title: 1 }, function (error, found) {
-    // Log any errors if the server encounters one
-    if (error) {
-      console.log(error);
-      res.send(error);
-    }
-    // Otherwise, send the result of this query to the browser
-    else {
-      res.render("index", {articles: found});
-    }
+  db.Article.find({}).sort({ title: 1 }).then(function (found) {
+    res.render("index", {articles: found});
   });
 });
 
@@ -48,9 +35,6 @@ app.post("/api/articles", function (req, res) {
     // Load the HTML into cheerio and save it to a variable
     // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
     var $ = cheerio.load(response.data);
-
-    // An empty array to save the data that we'll scrape
-    var results = [];
 
     // With cheerio, find each p-tag with the "title" class
     // (i: iterator. element: the current element)
@@ -62,11 +46,11 @@ app.post("/api/articles", function (req, res) {
 
       // In the currently selected element, look at its child elements (i.e., its a-tags),
       // then save the values for any "href" attributes that the child elements may have
-      var id = $(element).find("a").attr("href");
+      var id = $(element).find("a").attr("href").replace(/\//g, '_').replace(/.html/g, '');
       var link = "https://www.nytimes.com/"+$(element).find("a").attr("href");
 
       // Save these results in an object that we'll push into the results array we defined earlier
-      db.articles.save({
+      db.Article.create({
         _id: id,
         title: title,
         link: link,
@@ -80,19 +64,16 @@ app.post("/api/articles", function (req, res) {
 app.get("/api/articles", function (req, res) {
 
 
-  db.articles.find().sort({ title: 1 }, function (error, found) {
-    // Log any errors if the server encounters one
-    if (error) {
-      console.log(error);
-      res.send(error);
-    }
-    // Otherwise, send the result of this query to the browser
-    else {
-     res.send(found);
-    }
+  db.Article.find({}).sort({ title: 1 }).then(function (found) {
+    res.send(found);
   });
 });
 
+app.post("/api/articles/:id",function(req,res){
+  db.Article.findOneAndUpdate({_id:req.params.id}, { "$push": { "comments": req.body.comment }}, {new: true}).then(function(article) {
+    res.send(article);
+  });
+});
 
 app.listen(PORT, function () {
   console.log(

@@ -6,14 +6,31 @@
 //   }
 // });
 // Whenever someone clicks scrapeButton
-$(document).on("click", ".scrapeButton", function() {
+$(document).on("click", ".scrapeButton", function () {
 
   $.ajax({
     method: "post",
     url: "/api/articles/"
   })
     // With that done, add the note information to the page
-    .then(function(data) {
+    .then(function (data) {
+      console.log(data);
+    });
+});
+$(document).on("click", ".commentButton", function () {
+  event.preventDefault();
+  var articleId = $(this).attr('data-id');
+  var comment = $("#" + articleId).val();
+
+  $.ajax({
+    method: "post",
+    url: "/api/articles/" + articleId,
+    data: {
+      comment: comment
+    }
+  })
+    // With that done, add the note information to the page
+    .then(function (data) {
       console.log(data);
     });
 });
