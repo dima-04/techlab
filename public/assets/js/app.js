@@ -15,7 +15,7 @@ $(document).on("click", ".scrapeButton", function () {
     // With that done, add the note information to the page
     .then(function (data) {
       console.log(data);
-      location.reload(data);
+      location.reload();
     });
 });
 $(document).on("click", ".commentButton", function () {
@@ -33,5 +33,6 @@ $(document).on("click", ".commentButton", function () {
     // With that done, add the note information to the page
     .then(function (data) {
       console.log(data);
+      location.reload();
     });
 });
