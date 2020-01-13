@@ -15,6 +15,7 @@ $(document).on("click", ".scrapeButton", function () {
     // With that done, add the note information to the page
     .then(function (data) {
       console.log(data);
+      location.reload(data);
     });
 });
 $(document).on("click", ".commentButton", function () {
