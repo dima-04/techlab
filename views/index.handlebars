@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="row ">
+    <div class="col-md-12 bg-info">
+      <nav class="navbar navbar-expand-lg navbar-light bg-info ">
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
           <span class="navbar-toggler-icon"></span>
@@ -29,12 +29,12 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
+  <div class="row ">
+    <div class="col-md-12 ">
 
       {{#each articles}}
-      <div class="row">
-        <div class="col-md-12">
+      <div class="row border border-dark rounded m-3 p-2 bg-light">
+        <div class="col-md-12 border-secondary rounded-lg border-left">
           <div class="row">
             <div class="col-md-12">
               <a href="{{this.link}}" target="_blank">
@@ -47,11 +47,16 @@
               <p>{{this.summary}}</p>
             </div>
           </div>
-           <div class="row">
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{this._id}}Comments"
+            aria-expanded="false" aria-controls="{{this._id}}Comments">
+            Toggle Comments
+          </button>
+          <div class="collapse"id="{{this._id}}Comments">
+          <div class="row " >
             <div class="col-md-12">
               <h3>Comments:</h3>
               <ul>
-                 {{#each this.comments}}
+                {{#each this.comments}}
                 <li>{{this}}</li>
                 {{/each}}
               </ul>
@@ -60,13 +65,15 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <form>
-                  <label for="exampleFormControlTextarea1">Write Your Comment</label>
-                  <textarea class="form-control" id="{{this._id}}" rows="1"></textarea>
+                <form class="commentForm" data-id="{{this._id}}">
+                  <h4 for="exampleFormControlTextarea1">Write Your Comment</h4>
+                  <textarea class="form-control" id="{{this._id}}" rows="1" placeholder="Required example textarea"
+                    required></textarea></textarea>
               </div>
-              <button class="btn btn-primary commentButton" data-id="{{this._id}}" type="submit">Comment</button>
+              <button class="btn btn-primary" type="submit">Comment</button>
               </form>
             </div>
+          </div>
           </div>
         </div>
       </div>

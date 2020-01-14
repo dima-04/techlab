@@ -18,7 +18,7 @@ $(document).on("click", ".scrapeButton", function () {
       location.reload();
     });
 });
-$(document).on("click", ".commentButton", function () {
+$(document).on("submit", ".commentForm", function () {
   event.preventDefault();
   var articleId = $(this).attr('data-id');
   var comment = $("#" + articleId).val();
