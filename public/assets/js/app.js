@@ -18,6 +18,18 @@ $(document).on("click", ".scrapeButton", function () {
       location.reload();
     });
 });
+$(document).on("click", ".clearButton", function () {
+
+  $.ajax({
+    method: "delete",
+    url: "/api/articles/"
+  })
+    // With that done, add the note information to the page
+    .then(function (data) {
+      console.log(data);
+      location.reload();
+    });
+});
 $(document).on("submit", ".commentForm", function () {
   event.preventDefault();
   var articleId = $(this).attr('data-id');

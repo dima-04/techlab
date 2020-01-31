@@ -77,6 +77,11 @@ app.post("/api/articles/:id",function(req,res){
     res.send(article);
   });
 });
+app.delete("/api/articles/",function(req,res){
+  db.Article.deleteMany({}).then (function(err){
+    res.send("Deleted");
+  });
+});
 
 app.listen(PORT, function () {
   console.log(
